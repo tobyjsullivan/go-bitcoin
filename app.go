@@ -42,22 +42,35 @@ func main() {
 		Bits: bits,
 	}
 
-	start := time2.Now()
-
-	for nonce := uint32(0); ; nonce++ {
-		head.Nonce = nonce
-		hash := head.Hash()
-
-		if(nonce % 1000000 == 0) {
-			now := time2.Now()
-			seconds := now.Sub(start).Seconds()
-
-			rate := float64(nonce)/seconds
-			println( fmt.Sprintf("Nonce: %d; Hash: %032x; Rate: %.02f", nonce, hash, rate))
+	nextNonce := make(chan uint32, 200)
+	done := make(chan bool)
+	go func(nextNonce chan uint32) {
+		for nonce := uint32(0); ; nonce++ {
+			nextNonce <- nonce
 		}
+		done <- true
+	}(nextNonce)
+
+	numParallel := 8
+
+	start := time2.Now()
+	for i := 0; i < numParallel; i++ {
+		go func(nextNonce chan uint32, start time2.Time) {
+			for nonce := range nextNonce {
+				head.Nonce = nonce
+				hash := head.Hash()
+
+				if (nonce%1000000 == 0) {
+					now := time2.Now()
+					seconds := now.Sub(start).Seconds()
+
+					rate := float64(nonce) / seconds
+					println(fmt.Sprintf("Nonce: %d; Hash: %032x; Rate: %.02f", nonce, hash, rate))
+				}
+			}
+		}(nextNonce, start)
 	}
 
-	println("Computing hash of header")
-
+	<-done
 }
 
