@@ -4,6 +4,7 @@ import (
 	"github.com/tobyjsullivan/go-bitcoin/blocks"
 	"encoding/hex"
 	"fmt"
+	time2 "time"
 )
 
 const (
@@ -11,7 +12,6 @@ const (
 	strHashMerkleRoot =  "a0775e03f0ffe2a6f609ce5e6ac731035f1c716f020e56ae33e3e72215f1c430"
 	time = 1512886999
 	bits = 402698477
-	nonce = 3288773616
 )
 
 var (
@@ -40,12 +40,24 @@ func main() {
 		HashMerkleRoot: hashMerkleRoot,
 		Time: time,
 		Bits: bits,
-		Nonce: nonce,
+	}
+
+	start := time2.Now()
+
+	for nonce := uint32(0); ; nonce++ {
+		head.Nonce = nonce
+		hash := head.Hash()
+
+		if(nonce % 1000000 == 0) {
+			now := time2.Now()
+			seconds := now.Sub(start).Seconds()
+
+			rate := float64(nonce)/seconds
+			println( fmt.Sprintf("Nonce: %d; Hash: %032x; Rate: %.02f", nonce, hash, rate))
+		}
 	}
 
 	println("Computing hash of header")
-	hash := head.Hash()
 
-	println("Result:", fmt.Sprintf("%032x", hash))
 }
 
