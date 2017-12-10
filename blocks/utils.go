@@ -10,9 +10,8 @@ func reverseEndian(dst, src []byte) error {
 	}
 
 	for i := 0; i < sl; i++ {
-		dst[dl - (i + 1)] = src[i]
+		dst[dl-(i+1)] = src[i]
 	}
 
 	return nil
 }
-

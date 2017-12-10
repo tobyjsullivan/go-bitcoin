@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/tobyjsullivan/go-bitcoin/blocks"
 	"encoding/hex"
 	"fmt"
+	"github.com/tobyjsullivan/go-bitcoin/blocks"
 	time2 "time"
 )
 
 const (
-	strHashPrevBlock = "000000000000000000434a86dc49d3cf5349e584b6cbbdf292c68164db3af950"
-	strHashMerkleRoot =  "a0775e03f0ffe2a6f609ce5e6ac731035f1c716f020e56ae33e3e72215f1c430"
-	time = 1512886999
-	bits = 402698477
+	strHashPrevBlock  = "000000000000000000434a86dc49d3cf5349e584b6cbbdf292c68164db3af950"
+	strHashMerkleRoot = "a0775e03f0ffe2a6f609ce5e6ac731035f1c716f020e56ae33e3e72215f1c430"
+	time              = 1512886999
+	bits              = 402698477
 )
 
 var (
@@ -71,7 +71,7 @@ func main() {
 					}
 				}
 
-				if nonce % 5000000 == 0 {
+				if nonce%5000000 == 0 {
 					now := time2.Now()
 					seconds := now.Sub(start).Seconds()
 
@@ -84,4 +84,3 @@ func main() {
 
 	<-done
 }
-

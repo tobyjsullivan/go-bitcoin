@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestVersionBits(t *testing.T) {
 	flags := int32(0x42)
 

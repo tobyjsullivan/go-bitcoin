@@ -1,8 +1,8 @@
 package blocks
 
 import (
-	"encoding/binary"
 	"crypto/sha256"
+	"encoding/binary"
 )
 
 //type Header struct {
@@ -50,7 +50,6 @@ func NewHeader(
 }
 
 func (h *Header) SetNonce(nonce uint32) {
-
 
 	buf := make([]byte, binary.MaxVarintLen32)
 	binary.LittleEndian.PutUint32(buf, nonce)
