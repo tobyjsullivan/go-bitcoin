@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func TestHeader_HashForNext(t *testing.T) {
+func TestHeader_Hash(t *testing.T) {
 	strHashPrevBlock := "000000000000000000434a86dc49d3cf5349e584b6cbbdf292c68164db3af950"
 	strHashMerkleRoot :=  "a0775e03f0ffe2a6f609ce5e6ac731035f1c716f020e56ae33e3e72215f1c430"
 	version := int32(0x20000000)
