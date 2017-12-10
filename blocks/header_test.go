@@ -28,14 +28,7 @@ func TestHeader_Hash(t *testing.T) {
 	var hashMerkleRoot [32]byte
 	copy(hashMerkleRoot[:], hashMerkleRootParsed)
 
-	head := Header{
-		Version: version,
-		HashPrevBlock: hashPrevBlock,
-		HashMerkleRoot: hashMerkleRoot,
-		Time: time,
-		Bits: bits,
-		Nonce: nonce,
-	}
+	head := NewHeader(version, hashPrevBlock, hashMerkleRoot, time, bits, nonce)
 
 	hash := head.Hash()
 

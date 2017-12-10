@@ -34,14 +34,6 @@ func main() {
 	var hashMerkleRoot [32]byte
 	copy(hashMerkleRoot[:], hashMerkleRootParsed)
 
-	head := blocks.Header{
-		Version: version,
-		HashPrevBlock: hashPrevBlock,
-		HashMerkleRoot: hashMerkleRoot,
-		Time: time,
-		Bits: bits,
-	}
-
 	nextNonce := make(chan uint32, 200)
 	done := make(chan bool)
 	go func(nextNonce chan uint32) {
@@ -54,18 +46,37 @@ func main() {
 	numParallel := 8
 
 	start := time2.Now()
+	var best [32]byte
+	var set bool
 	for i := 0; i < numParallel; i++ {
 		go func(nextNonce chan uint32, start time2.Time) {
+			head := blocks.NewHeader(version, hashPrevBlock, hashMerkleRoot, time, bits, 0)
+
 			for nonce := range nextNonce {
-				head.Nonce = nonce
+				head.SetNonce(nonce)
 				hash := head.Hash()
 
-				if (nonce%1000000 == 0) {
+				if !set {
+					set = true
+					best = hash
+				}
+
+				for i := 0; i < len(hash); i++ {
+					if best[i] < hash[i] {
+						break
+					}
+					if hash[i] < best[i] {
+						best = hash
+						break
+					}
+				}
+
+				if nonce % 5000000 == 0 {
 					now := time2.Now()
 					seconds := now.Sub(start).Seconds()
 
 					rate := float64(nonce) / seconds
-					println(fmt.Sprintf("Nonce: %d; Hash: %032x; Rate: %.02f", nonce, hash, rate))
+					println(fmt.Sprintf("Nonce: %d\nHash: %032x\nBest: %032x\nRate: %.00f/s", nonce, hash, best, rate))
 				}
 			}
 		}(nextNonce, start)
