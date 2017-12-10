@@ -27,41 +27,25 @@ func NewHeader(
 ) Header {
 	var hashInput [80]byte
 
-	buf := make([]byte, binary.MaxVarintLen32)
-	binary.LittleEndian.PutUint32(buf, uint32(nVersion))
-	copy(hashInput[0:4], buf[:4])
-	buf = make([]byte, 32)
-	reverseEndian(buf, hashPrevBlock[:])
-	copy(hashInput[4:36], buf)
-	buf = make([]byte, 32)
-	reverseEndian(buf, hashMerkleRoot[:])
-	copy(hashInput[36:68], buf)
-	buf = make([]byte, binary.MaxVarintLen32)
-	binary.LittleEndian.PutUint32(buf, nTime)
-	copy(hashInput[68:72], buf[:4])
-	buf = make([]byte, binary.MaxVarintLen32)
-	binary.LittleEndian.PutUint32(buf, nBits)
-	copy(hashInput[72:76], buf[:4])
-	buf = make([]byte, binary.MaxVarintLen32)
-	binary.LittleEndian.PutUint32(buf, nNonce)
-	copy(hashInput[76:80], buf[:4])
+	binary.LittleEndian.PutUint32(hashInput[0:4], uint32(nVersion))
+	reverseEndian(hashInput[4:36], hashPrevBlock[:])
+	reverseEndian(hashInput[36:68], hashMerkleRoot[:])
+	binary.LittleEndian.PutUint32(hashInput[68:72], nTime)
+	binary.LittleEndian.PutUint32(hashInput[72:76], nBits)
+	binary.LittleEndian.PutUint32(hashInput[76:80], nNonce)
 
 	return Header(hashInput)
 }
 
 func (h *Header) SetNonce(nonce uint32) {
-
-	buf := make([]byte, binary.MaxVarintLen32)
-	binary.LittleEndian.PutUint32(buf, nonce)
-	copy(h[76:80], buf[:4])
+	binary.LittleEndian.PutUint32(h[76:80], nonce)
 }
 
 func (h *Header) Hash() [32]byte {
 	hash1 := sha256.Sum256(h[:])
-
 	hash2 := sha256.Sum256(hash1[:])
+
 	out := [32]byte{}
 	reverseEndian(out[:], hash2[:])
-
 	return out
 }
