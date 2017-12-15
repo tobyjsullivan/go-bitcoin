@@ -6,6 +6,9 @@ It is a personal effort to learn the implementation details of Bitcoin by implem
 
 ## Resources
 
-- https://en.bitcoin.it/wiki/Protocol_documentation
-- https://lopp.net/pdf/Bitcoin_Developer_Reference.pdf
-- https://bitcoin.org/en/developer-reference
+- Bitcoin References
+   - https://en.bitcoin.it/wiki/Protocol_documentation
+   - https://lopp.net/pdf/Bitcoin_Developer_Reference.pdf
+   - https://bitcoin.org/en/developer-reference
+- Elliptic Curve Digital Signatures
+   - https://www.royalfork.org/2014/09/04/ecc/
